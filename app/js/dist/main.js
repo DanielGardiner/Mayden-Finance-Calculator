@@ -5,7 +5,7 @@ document.querySelector('form').addEventListener('submit', function (e) {
     var adminFee = calculateAdminFee(amountBorrowed);
     var totalBorrowed = amountBorrowed + adminFee;
     var monthlyRepayment = (expectedSalary / 12) * (monthlyRepaymentPercent / 100);
-    monthlyRepayment = parseInt(Math.min(monthlyRepayment, amountBorrowed).toFixed(1));
+    monthlyRepayment = Math.min(monthlyRepayment, amountBorrowed);
     var monthsToPayOff = amountBorrowed / monthlyRepayment;
     var yearsToPayOff = Math.floor(monthsToPayOff / 12);
     monthsToPayOff = (monthsToPayOff - (12 * yearsToPayOff));
@@ -40,9 +40,16 @@ function calculateAdminFee(amountBorrowed) {
     return adminFee;
 }
 function generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayOff, monthsToPayOff) {
+    var monthlyRepaymentString;
+    if (monthlyRepayment < 0.1) {
+        monthlyRepaymentString = monthlyRepayment.toPrecision(1);
+    }
+    else {
+        monthlyRepaymentString = monthlyRepayment.toFixed(1).toString();
+    }
     var text = 'The remaining <span class="enhance-primary">£' +
         numberWithCommas(amountBorrowed) + '</span> of the loan will be payed off at <span class="enhance-secondary">£' +
-        numberWithCommas(monthlyRepayment) + '</span> over <span class="enhance-secondary">' +
+        numberWithCommas(monthlyRepaymentString) + '</span> over <span class="enhance-secondary">' +
         numberWithCommas(yearsToPayOff) + ' years</span> and <span class="enhance-secondary">' +
         numberWithCommas(monthsToPayOff) + ' months</span>';
     // fix plurals and remove e.g. 0 years / 0 months
@@ -66,7 +73,7 @@ function showWarningBorder(element, min, max) {
             this.style.border = '4px solid #f05f55';
         }
         else {
-            this.style.border = 'none';
+            this.style.border = '1px solid #dbdbdb';
         }
     });
 }
