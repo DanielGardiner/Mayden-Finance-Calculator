@@ -13,9 +13,35 @@ html {
 
 .hline {
   margin: 50px 0;
-  border-top: 1px solid #c2c2c2;
+  border-top: 1px solid #dbdbdb;
 }
 
-//#end {
-//  margin-top: 400px;
-//}
+#calculate {
+  background: #8d0377;
+  border: 1px solid #fff;
+  color: #fff;
+  font-size: 15px;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  padding: 6px 20px;
+  text-decoration: none;
+  min-width: 130px;
+  transition: .5s;
+  height: 40px;
+}
+
+#calculate:hover {
+  color: #fff;
+  background: #c63806;
+  border: 1px solid #fff;
+}
+
+.enhance-primary {
+  color: #8d0377;
+  font-weight: bold;
+}
+
+.enhance-secondary {
+  color: #c63806;
+  font-weight: bold;
+}
