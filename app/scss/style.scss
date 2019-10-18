@@ -1,11 +1,10 @@
-//
-//.col-form-label {
-//
-//  background-color: red;
-//}
 
-.output {
+html {
+  scroll-behavior: smooth;
+}
+.hide {
   display: none;
+  margin-bottom: 200px;
 }
 
 .rule {
@@ -16,3 +15,7 @@
   margin: 50px 0;
   border-top: 1px solid #c2c2c2;
 }
+
+//#end {
+//  margin-top: 400px;
+//}
