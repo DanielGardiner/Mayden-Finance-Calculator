@@ -6,22 +6,15 @@ document.querySelector('form').addEventListener('submit', function (e) {
 
     let monthlyRepaymentPercent: number = parseInt(this.inputMonthlyRepayment.value)
 
-    console.log(monthlyRepaymentPercent)
-    console.log(typeof monthlyRepaymentPercent)
-
     let adminFee = calculateAdminFee(amountBorrowed)
 
     let totalBorrowed: number = amountBorrowed + adminFee
 
     let monthlyRepayment: number = (expectedSalary/12) * (monthlyRepaymentPercent/100)
 
-    monthlyRepayment = Math.min(monthlyRepayment, amountBorrowed).toFixed(1)
+    monthlyRepayment = parseInt(Math.min(monthlyRepayment, amountBorrowed).toFixed(1))
 
     let monthsToPayOff: number = amountBorrowed/monthlyRepayment
-
-    console.log(amountBorrowed)
-    console.log(monthlyRepayment)
-    console.log(monthsToPayOff)
 
     let yearsToPayOff: number = Math.floor(monthsToPayOff / 12)
 
@@ -33,8 +26,7 @@ document.querySelector('form').addEventListener('submit', function (e) {
         amountBorrowed,
         monthlyRepayment,
         yearsToPayOff,
-        monthsToPayOff,
-        expectedSalary
+        monthsToPayOff
     )
 
     let results = {
@@ -46,8 +38,6 @@ document.querySelector('form').addEventListener('submit', function (e) {
         monthsToPayOff: monthsToPayOff,
         repaymentTimeText: repaymentTimeText
     }
-
-    console.log(results)
 
     e.preventDefault()
 
@@ -82,8 +72,7 @@ function calculateAdminFee (amountBorrowed: number): number {
 function generateRepaymentTimeText(amountBorrowed: number,
                                    monthlyRepayment: number,
                                    yearsToPayOff: number,
-                                   monthsToPayOff: number,
-                                   expectedSalary: number):string {
+                                   monthsToPayOff: number):string {
 
     let text: string = 'The remaining <span class="enhance-primary">£' +
         numberWithCommas(amountBorrowed) + '</span> of the loan will be payed off at <span class="enhance-secondary">£' +
@@ -114,7 +103,7 @@ showWarningBorder('#inputSalary', 1, Infinity)
 showWarningBorder('#inputMonthlyRepayment', 1, 100)
 
 function showWarningBorder(element, min, max) {
-    document.querySelector('element').addEventListener('input', function () {
+    document.querySelector(element).addEventListener('input', function () {
         if (this.value < min || this.value > max) {
             this.style.border = '4px solid #f05f55'
         } else {

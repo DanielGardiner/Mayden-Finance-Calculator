@@ -2,20 +2,15 @@ document.querySelector('form').addEventListener('submit', function (e) {
     var amountBorrowed = parseInt(this.inputToBorrow.value);
     var expectedSalary = parseInt(this.inputSalary.value);
     var monthlyRepaymentPercent = parseInt(this.inputMonthlyRepayment.value);
-    console.log(monthlyRepaymentPercent);
-    console.log(typeof monthlyRepaymentPercent);
     var adminFee = calculateAdminFee(amountBorrowed);
     var totalBorrowed = amountBorrowed + adminFee;
     var monthlyRepayment = (expectedSalary / 12) * (monthlyRepaymentPercent / 100);
-    monthlyRepayment = Math.min(monthlyRepayment, amountBorrowed).toFixed(1);
+    monthlyRepayment = parseInt(Math.min(monthlyRepayment, amountBorrowed).toFixed(1));
     var monthsToPayOff = amountBorrowed / monthlyRepayment;
-    console.log(amountBorrowed);
-    console.log(monthlyRepayment);
-    console.log(monthsToPayOff);
     var yearsToPayOff = Math.floor(monthsToPayOff / 12);
     monthsToPayOff = (monthsToPayOff - (12 * yearsToPayOff));
     monthsToPayOff = parseInt(monthsToPayOff.toFixed(1));
-    var repaymentTimeText = generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayOff, monthsToPayOff, expectedSalary);
+    var repaymentTimeText = generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayOff, monthsToPayOff);
     var results = {
         amountBorrowed: amountBorrowed,
         adminFee: numberWithCommas(adminFee),
@@ -25,7 +20,6 @@ document.querySelector('form').addEventListener('submit', function (e) {
         monthsToPayOff: monthsToPayOff,
         repaymentTimeText: repaymentTimeText
     };
-    console.log(results);
     e.preventDefault();
     document.querySelector('.hide').style.display = 'block';
     window.scrollTo(0, document.body.scrollHeight);
@@ -45,7 +39,7 @@ function calculateAdminFee(amountBorrowed) {
     adminFee = parseInt(adminFee.toFixed(1));
     return adminFee;
 }
-function generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayOff, monthsToPayOff, expectedSalary) {
+function generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayOff, monthsToPayOff) {
     var text = 'The remaining <span class="enhance-primary">£' +
         numberWithCommas(amountBorrowed) + '</span> of the loan will be payed off at <span class="enhance-secondary">£' +
         numberWithCommas(monthlyRepayment) + '</span> over <span class="enhance-secondary">' +
@@ -67,7 +61,7 @@ showWarningBorder('#inputToBorrow', 1, 8000);
 showWarningBorder('#inputSalary', 1, Infinity);
 showWarningBorder('#inputMonthlyRepayment', 1, 100);
 function showWarningBorder(element, min, max) {
-    document.querySelector('element').addEventListener('input', function () {
+    document.querySelector(element).addEventListener('input', function () {
         if (this.value < min || this.value > max) {
             this.style.border = '4px solid #f05f55';
         }
