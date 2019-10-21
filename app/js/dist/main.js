@@ -55,7 +55,7 @@ function generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayO
     // fix plurals and remove e.g. 0 years / 0 months
     text = text.replace('1 years', '1 year');
     text = text.replace('<span class="enhance-secondary">0 years</span> and ', '');
-    text = text.replace('1 months', '1 month');
+    text = text.replace('<span class="enhance-secondary">1 months', '<span class="enhance-secondary">1 month');
     text = text.replace('and <span class="enhance-secondary">0 months</span>', '');
     text = text.replace('over <span class="enhance-secondary">1 month</span>', 'within <span class="enhance-secondary">1 month</span>');
     text = text.replace('.0</span>', '</span>'); // remove trailing .0
@@ -69,7 +69,8 @@ showWarningBorder('#inputSalary', 1, Infinity);
 showWarningBorder('#inputMonthlyRepayment', 1, 100);
 function showWarningBorder(element, min, max) {
     document.querySelector(element).addEventListener('input', function () {
-        if (this.value < min || this.value > max) {
+        var regexp = '(?=[^\\0])(?=^([0-9]+){0,1}(\\.[0-9]{1,2}){0,1}$)';
+        if (this.value < min || this.value > max || this.value.match(regexp) === null) {
             this.style.border = '4px solid #f05f55';
         }
         else {
