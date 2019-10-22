@@ -20,7 +20,7 @@ document.querySelector('form').addEventListener('submit', function (e) {
 
     monthsToPayOff =  (monthsToPayOff - (12 * yearsToPayOff))
 
-    monthsToPayOff =  parseInt(monthsToPayOff.toFixed(1))
+    // monthsToPayOff =  parseInt(monthsToPayOff.toFixed(1))
 
     let repaymentTimeText = generateRepaymentTimeText(
         amountBorrowed,
@@ -31,8 +31,9 @@ document.querySelector('form').addEventListener('submit', function (e) {
 
     let results = {
         amountBorrowed: amountBorrowed,
-        adminFee: numberWithCommas(adminFee),
-        totalBorrowed: numberWithCommas(totalBorrowed),
+        // adminFee: numberWithCommas(adminFee),
+        adminFee: roundDownAddCommas(adminFee),
+        totalBorrowed: roundDownAddCommas(totalBorrowed),
         monthlyRepayment: monthlyRepayment,
         yearsToPayOff: yearsToPayOff,
         monthsToPayOff: monthsToPayOff,
@@ -58,13 +59,18 @@ document.querySelector('form').addEventListener('submit', function (e) {
 function calculateAdminFee (amountBorrowed: number): number {
     let adminFee: number = amountBorrowed * 0.05
 
+    // console.log(adminFee)
+
     if(amountBorrowed > 7200) {
         adminFee += 1000
     } else if (amountBorrowed > 6400) {
         adminFee += 500
     }
 
-    adminFee = parseInt(adminFee.toFixed(1))
+    // adminFee = roundDown(adminFee)
+
+    // console.log(adminFee)
+
 
     return adminFee
 }
@@ -72,21 +78,13 @@ function calculateAdminFee (amountBorrowed: number): number {
 function generateRepaymentTimeText(amountBorrowed: number,
                                    monthlyRepayment: number,
                                    yearsToPayOff: number,
-                                   monthsToPayOff: number):string {
-
-    let monthlyRepaymentString: string
-
-    if (monthlyRepayment < 0.1) {
-        monthlyRepaymentString = monthlyRepayment.toPrecision(1)
-    } else {
-        monthlyRepaymentString = monthlyRepayment.toFixed(1).toString()
-    }
+                                   monthsToPayOff: number): string {
 
     let text: string = 'The remaining <span class="enhance-primary">£' +
-        numberWithCommas(amountBorrowed) + '</span> of the loan will be payed off at <span class="enhance-secondary">£' +
-        numberWithCommas(monthlyRepaymentString) + '</span> over <span class="enhance-secondary">' +
-        numberWithCommas(yearsToPayOff) + ' years</span> and <span class="enhance-secondary">' +
-        numberWithCommas(monthsToPayOff) + ' months</span>'
+        roundDownAddCommas(amountBorrowed) + '</span> of the loan will be payed off at <span class="enhance-secondary">£' +
+        roundDownAddCommas(monthlyRepayment) + '</span> over <span class="enhance-secondary">' +
+        roundDownAddCommas(yearsToPayOff) + ' years</span> and <span class="enhance-secondary">' +
+        roundDownAddCommas(monthsToPayOff) + ' months</span>'
 
     // fix plurals and remove e.g. 0 years / 0 months
     text = text.replace('1 years', '1 year')
@@ -98,10 +96,6 @@ function generateRepaymentTimeText(amountBorrowed: number,
 
     return text
 
-}
-
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 showWarningBorder('#inputToBorrow', 1, 8000)
@@ -121,4 +115,24 @@ function showWarningBorder(element, min, max) {
     })
 }
 
+// function numberWithCommas(x: string | number): string {
+//     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+// }
 
+function roundDownAddCommas(x: number): string {
+    let xString: string
+
+    if (x < 0.01) {
+        // console.log('less than 0.01')
+        xString = x.toPrecision(1)
+    } else {
+        // console.log('greater than 0.01')
+        // console.log(parseInt(x.toFixed(2))
+        xString = x.toFixed(2)
+    }
+
+    xString = xString.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+    return xString
+
+}
