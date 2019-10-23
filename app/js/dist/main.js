@@ -4,22 +4,18 @@ document.querySelector('form').addEventListener('submit', function (e) {
     var monthlyRepaymentPercent = parseFloat(this.inputMonthlyRepayment.value);
     var adminFee = calculateAdminFee(amountBorrowed);
     var totalBorrowed = amountBorrowed + adminFee;
-    console.log(amountBorrowed);
-    console.log(adminFee);
-    console.log(totalBorrowed);
-    var monthlyRepayment = (expectedSalary / 12) * (monthlyRepaymentPercent / 100);
-    monthlyRepayment = Math.min(monthlyRepayment, amountBorrowed);
+    var monthlyRepayment = calculateMonthlyRepayment(expectedSalary, monthlyRepaymentPercent, amountBorrowed);
     var monthsToPayOff = amountBorrowed / monthlyRepayment;
     var yearsToPayOff = Math.floor(monthsToPayOff / 12);
     monthsToPayOff = (monthsToPayOff - (12 * yearsToPayOff));
+    if (roundDownAddCommas(monthsToPayOff, 2) === '12') {
+        yearsToPayOff += 1;
+        monthsToPayOff = 0;
+    }
     var repaymentTimeText = generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayOff, monthsToPayOff);
     var results = {
-        amountBorrowed: amountBorrowed,
         adminFee: roundDownAddCommas(adminFee, 2),
         totalBorrowed: roundDownAddCommas(totalBorrowed, 2),
-        monthlyRepayment: monthlyRepayment,
-        yearsToPayOff: yearsToPayOff,
-        monthsToPayOff: monthsToPayOff,
         repaymentTimeText: repaymentTimeText
     };
     e.preventDefault();
@@ -40,19 +36,24 @@ function calculateAdminFee(amountBorrowed) {
     }
     return adminFee;
 }
+function calculateMonthlyRepayment(expectedSalary, monthlyRepaymentPercent, amountBorrowed) {
+    var monthlyRepayment = (expectedSalary / 12) * (monthlyRepaymentPercent / 100);
+    monthlyRepayment = Math.min(monthlyRepayment, amountBorrowed);
+    return monthlyRepayment;
+}
 function generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayOff, monthsToPayOff) {
     var text = 'The remaining <span class="enhance-primary">£' +
         roundDownAddCommas(amountBorrowed, 2) + '</span> of the loan will be payed off at <span class="enhance-secondary">£' +
         roundDownAddCommas(monthlyRepayment, 2) + '</span> over <span class="enhance-secondary">' +
         yearsToPayOff + ' years</span> and <span class="enhance-secondary">' +
         roundDownAddCommas(monthsToPayOff, 1) + ' months</span>';
-    // fix plurals and remove 0 years/0 months text
+    // fix plurals, remove 0 years / 0 months text, and remove unnecessary trailing .0
     text = text.replace('1 years', '1 year');
     text = text.replace('<span class="enhance-secondary">0 years</span> and ', '');
-    text = text.replace('<span class="enhance-secondary">1 months', '<span class="enhance-secondary">1 month');
+    text = text.replace('<span class="enhance-secondary">1.0 months', '<span class="enhance-secondary">1.0 month');
     text = text.replace('and <span class="enhance-secondary">0 months</span>', '');
-    text = text.replace('/\\.0/ months', ' months');
-    text = text.replace('/\\.0/ month', ' month');
+    text = text.replace('.0 months', ' months'); // remove trailing .0
+    text = text.replace('.0 month', ' month'); // remove trailing .0
     text = text.replace('over <span class="enhance-secondary">1 month</span>', 'within <span class="enhance-secondary">1 month</span>');
     return text;
 }
@@ -61,6 +62,7 @@ showWarningBorder('#inputSalary', 1, Infinity);
 showWarningBorder('#inputMonthlyRepayment', 1, 100);
 function showWarningBorder(element, min, max) {
     document.querySelector(element).addEventListener('input', function () {
+        // contains 3 numeric characters after decimal
         var regexp = '(?=[^\\0])(?=^([0-9]+){0,1}(\\.[0-9]{1,2}){0,1}$)';
         if (this.value < min || this.value > max || this.value.match(regexp) === null) {
             this.style.border = '4px solid #f05f55';
