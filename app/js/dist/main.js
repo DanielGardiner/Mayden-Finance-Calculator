@@ -1,9 +1,12 @@
 document.querySelector('form').addEventListener('submit', function (e) {
-    var amountBorrowed = parseInt(this.inputToBorrow.value);
-    var expectedSalary = parseInt(this.inputSalary.value);
-    var monthlyRepaymentPercent = parseInt(this.inputMonthlyRepayment.value);
+    var amountBorrowed = parseFloat(this.inputToBorrow.value);
+    var expectedSalary = parseFloat(this.inputSalary.value);
+    var monthlyRepaymentPercent = parseFloat(this.inputMonthlyRepayment.value);
     var adminFee = calculateAdminFee(amountBorrowed);
     var totalBorrowed = amountBorrowed + adminFee;
+    console.log(amountBorrowed);
+    console.log(adminFee);
+    console.log(totalBorrowed);
     var monthlyRepayment = (expectedSalary / 12) * (monthlyRepaymentPercent / 100);
     monthlyRepayment = Math.min(monthlyRepayment, amountBorrowed);
     var monthsToPayOff = amountBorrowed / monthlyRepayment;
@@ -48,6 +51,8 @@ function generateRepaymentTimeText(amountBorrowed, monthlyRepayment, yearsToPayO
     text = text.replace('<span class="enhance-secondary">0 years</span> and ', '');
     text = text.replace('<span class="enhance-secondary">1 months', '<span class="enhance-secondary">1 month');
     text = text.replace('and <span class="enhance-secondary">0 months</span>', '');
+    text = text.replace('/\\.0/ months', ' months');
+    text = text.replace('/\\.0/ month', ' month');
     text = text.replace('over <span class="enhance-secondary">1 month</span>', 'within <span class="enhance-secondary">1 month</span>');
     return text;
 }

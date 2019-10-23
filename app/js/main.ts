@@ -1,14 +1,18 @@
 
 document.querySelector('form').addEventListener('submit', function (e) {
-    let amountBorrowed: number = parseInt(this.inputToBorrow.value)
+    let amountBorrowed: number = parseFloat(this.inputToBorrow.value)
 
-    let expectedSalary: number = parseInt(this.inputSalary.value)
+    let expectedSalary: number = parseFloat(this.inputSalary.value)
 
-    let monthlyRepaymentPercent: number = parseInt(this.inputMonthlyRepayment.value)
+    let monthlyRepaymentPercent: number = parseFloat(this.inputMonthlyRepayment.value)
 
     let adminFee = calculateAdminFee(amountBorrowed)
 
     let totalBorrowed: number = amountBorrowed + adminFee
+
+    console.log(amountBorrowed)
+    console.log(adminFee)
+    console.log(totalBorrowed)
 
     let monthlyRepayment: number = (expectedSalary/12) * (monthlyRepaymentPercent/100)
 
@@ -26,6 +30,7 @@ document.querySelector('form').addEventListener('submit', function (e) {
         yearsToPayOff,
         monthsToPayOff
     )
+
 
     let results = {
         amountBorrowed: amountBorrowed,
@@ -81,10 +86,13 @@ function generateRepaymentTimeText(amountBorrowed: number,
     text = text.replace('<span class="enhance-secondary">0 years</span> and ', '')
     text = text.replace('<span class="enhance-secondary">1 months', '<span class="enhance-secondary">1 month')
     text = text.replace('and <span class="enhance-secondary">0 months</span>', '')
+    text = text.replace('/\\.0/ months', ' months')
+    text = text.replace('/\\.0/ month', ' month')
     text = text.replace('over <span class="enhance-secondary">1 month</span>', 'within <span class="enhance-secondary">1 month</span>')
 
     return text
 }
+
 
 showWarningBorder('#inputToBorrow', 1, 8000)
 
