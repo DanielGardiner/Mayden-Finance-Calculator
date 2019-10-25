@@ -6,7 +6,9 @@ document.querySelector('form').addEventListener('submit', function (e) {
 
     let monthlyRepaymentPercent: number = parseFloat(this.inputMonthlyRepayment.value)
 
-    let adminFee = calculateAdminFee(amountBorrowed)
+    let adminFee = amountBorrowed * 0.05
+
+    amountBorrowed = applyAdditionalChange(amountBorrowed)
 
     let totalBorrowed: number = amountBorrowed + adminFee
 
@@ -53,16 +55,15 @@ document.querySelector('form').addEventListener('submit', function (e) {
 
 })
 
-function calculateAdminFee (amountBorrowed: number): number {
-    let adminFee: number = amountBorrowed * 0.05
+function applyAdditionalChange(amountBorrowed: number): number {
 
     if(amountBorrowed > 7200) {
-        adminFee += 1000
+        amountBorrowed += 1000
     } else if (amountBorrowed > 6400) {
-        adminFee += 500
+        amountBorrowed += 500
     }
 
-    return adminFee
+    return amountBorrowed
 }
 
 function calculateMonthlyRepayment(expectedSalary: number, monthlyRepaymentPercent: number, amountBorrowed: number): number {
