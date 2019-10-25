@@ -2,7 +2,8 @@ document.querySelector('form').addEventListener('submit', function (e) {
     var amountBorrowed = parseFloat(this.inputToBorrow.value);
     var expectedSalary = parseFloat(this.inputSalary.value);
     var monthlyRepaymentPercent = parseFloat(this.inputMonthlyRepayment.value);
-    var adminFee = calculateAdminFee(amountBorrowed);
+    var adminFee = amountBorrowed * 0.05;
+    amountBorrowed = applyAdditionalChange(amountBorrowed);
     var totalBorrowed = amountBorrowed + adminFee;
     var monthlyRepayment = calculateMonthlyRepayment(expectedSalary, monthlyRepaymentPercent, amountBorrowed);
     var monthsToPayOff = amountBorrowed / monthlyRepayment;
@@ -26,15 +27,14 @@ document.querySelector('form').addEventListener('submit', function (e) {
     var html = template(results);
     document.querySelector('.hide').innerHTML = html;
 });
-function calculateAdminFee(amountBorrowed) {
-    var adminFee = amountBorrowed * 0.05;
+function applyAdditionalChange(amountBorrowed) {
     if (amountBorrowed > 7200) {
-        adminFee += 1000;
+        amountBorrowed += 1000;
     }
     else if (amountBorrowed > 6400) {
-        adminFee += 500;
+        amountBorrowed += 500;
     }
-    return adminFee;
+    return amountBorrowed;
 }
 function calculateMonthlyRepayment(expectedSalary, monthlyRepaymentPercent, amountBorrowed) {
     var monthlyRepayment = (expectedSalary / 12) * (monthlyRepaymentPercent / 100);
