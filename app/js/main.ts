@@ -86,7 +86,7 @@ function generateRepaymentTimeText(amountBorrowed: number,
 
     let text: string = 'The remaining <span class="enhance-primary">£' +
         roundDownAddCommas(amountBorrowed, 2) + '</span> of the loan will be payed off at <span class="enhance-secondary">£' +
-        roundDownAddCommas(monthlyRepayment, 2) + '</span> over <span class="enhance-secondary">' +
+        roundDownAddCommas(monthlyRepayment, 2) + '</span> per month over <span class="enhance-secondary">' +
         yearsToPayOff + ' years</span> and <span class="enhance-secondary">' +
         Math.ceil(monthsToPayOff) + ' months</span>'
 
@@ -97,7 +97,7 @@ function generateRepaymentTimeText(amountBorrowed: number,
     text = text.replace('and <span class="enhance-secondary">0 months</span>', '')
     text = text.replace('.0 months', ' months') // remove trailing .0
     text = text.replace('.0 month', ' month') // remove trailing .0
-    text = text.replace('over <span class="enhance-secondary">1 month</span>', 'within <span class="enhance-secondary">1 month</span>')
+    text = text.replace('per month over <span class="enhance-secondary">1 month</span>', 'within <span class="enhance-secondary">1 month</span>')
 
     return text
 }
